@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stocked. — Pantry OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; background: #FAFAF8; color: #2D2D2D; }
+    #app { display: flex; height: 100vh; font-size: 14px; }
+    #sidebar { width: 220px; min-width: 220px; background: #fff; border-right: 1px solid #E8E6E1; display: flex; flex-direction: column; }
+    .sidebar-logo { padding: 20px 16px 16px; border-bottom: 1px solid #E8E6E1; }
+    .logo-pill { background: #1a1a1a; color: #fff; font-weight: 700; font-size: 15px; padding: 7px 14px; border-radius: 10px; display: inline-block; letter-spacing: -0.3px; }
+    .sidebar-nav { flex: 1; padding: 12px 8px; display: flex; flex-direction: column; gap: 2px; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 8px; cursor: pointer; font-size: 13.5px; color: #6b6860; transition: all 0.15s; font-weight: 400; }
+    .nav-item:hover { background: #F5F4F1; color: #2D2D2D; }
+    .nav-item.active { background: #2D2D2D; color: #fff; font-weight: 500; }
+    .nav-item svg { flex-shrink: 0; }
+    .sidebar-footer { padding: 12px 16px; border-top: 1px solid #E8E6E1; }
+    .main { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+    .topbar { padding: 18px 28px 0; display: flex; align-items: center; justify-content: space-between; }
+    .page-title { font-size: 20px; font-weight: 600; letter-spacing: -0.4px; color: #1a1a1a; }
+    .page-sub { font-size: 13px; color: #9B9488; margin-top: 2px; }
+    .topbar-actions { display: flex; gap: 10px; align-items: center; }
+    .btn { padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid #E8E6E1; background: #fff; color: #2D2D2D; transition: all 0.15s; font-family: 'DM Sans', sans-serif; }
+    .btn:hover { background: #F5F4F1; }
+    .btn-primary { background: #1a1a1a; color: #fff; border-color: #1a1a1a; }
+    .btn-primary:hover { background: #333; }
+    .content { padding: 20px 28px 32px; flex: 1; }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 14px; margin-bottom: 24px; }
+    .kpi-card { background: #fff; border: 1px solid #E8E6E1; border-radius: 12px; padding: 16px 18px; }
+    .kpi-label { font-size: 11.5px; color: #9B9488; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .kpi-value { font-size: 22px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.5px; }
+    .kpi-sub { font-size: 12px; color: #9B9488; margin-top: 4px; }
+    .progress-bar { height: 4px; background: #F0EEE9; border-radius: 99px; margin-top: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 99px; }
+    .progress-green { background: #4A7C59; }
+    .progress-amber { background: #C98B3A; }
+    .progress-red { background: #B85450; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .card { background: #fff; border: 1px solid #E8E6E1; border-radius: 12px; padding: 18px 20px; }
+    .card-title { font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+    .card-title-text { font-size: 14px; font-weight: 600; }
+    .insight-badge { font-size: 10px; background: #F5F4F1; color: #9B9488; padding: 3px 8px; border-radius: 99px; font-weight: 500; }
+    table { width: 100%; border-collapse: collapse; }
+    th { font-size: 11px; font-weight: 600; color: #9B9488; text-transform: uppercase; letter-spacing: 0.4px; padding: 0 10px 10px 0; text-align: left; border-bottom: 1px solid #F0EEE9; }
+    td { padding: 11px 10px 11px 0; font-size: 13px; color: #2D2D2D; border-bottom: 1px solid #F8F7F4; }
+    tr:last-child td { border-bottom: none; }
+    .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 99px; font-size: 11px; font-weight: 500; }
+    .badge-green { background: #EBF4EF; color: #2E6644; }
+    .badge-amber { background: #FDF3E3; color: #8A5A1A; }
+    .badge-red { background: #FCEAEA; color: #7A2E2E; }
+    .badge-gray { background: #F2F0EB; color: #6b6860; }
+    .bar-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .bar-label { font-size: 12px; color: #6b6860; width: 80px; flex-shrink: 0; }
+    .bar-track { flex: 1; height: 8px; background: #F0EEE9; border-radius: 99px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 99px; background: #7C6F5B; }
+    .bar-fill-accent { background: #4A7C59; }
+    .bar-amount { font-size: 12px; color: #2D2D2D; font-weight: 500; width: 44px; text-align: right; flex-shrink: 0; }
+    .insight-item { border-left: 3px solid #7C6F5B; padding: 10px 12px; background: #FAFAF8; border-radius: 0 8px 8px 0; margin-bottom: 10px; font-size: 13px; color: #4a4640; line-height: 1.5; }
+    .insight-item:last-child { margin-bottom: 0; }
+    .view { display: none; }
+    .view.active { display: block; }
+    .vendor-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+    .vendor-card { background: #fff; border: 1px solid #E8E6E1; border-radius: 12px; padding: 16px; }
+    .vendor-name { font-size: 15px; font-weight: 600; color: #1a1a1a; margin-bottom: 6px; }
+    .vendor-meta { font-size: 12px; color: #9B9488; line-height: 1.7; }
+    .vendor-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .tag { background: #F2F0EB; color: #6b6860; font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 500; }
+    .budget-row { display: grid; grid-template-columns: 1fr 90px 90px 90px 80px; gap: 8px; align-items: center; padding: 11px 0; border-bottom: 1px solid #F8F7F4; font-size: 13px; }
+    .budget-row:last-child { border-bottom: none; }
+    .budget-header { display: grid; grid-template-columns: 1fr 90px 90px 90px 80px; gap: 8px; padding: 0 0 10px; border-bottom: 1px solid #F0EEE9; font-size: 11px; font-weight: 600; color: #9B9488; text-transform: uppercase; letter-spacing: 0.4px; }
+    .mini-bar-track { height: 4px; background: #F0EEE9; border-radius: 99px; overflow: hidden; width: 100%; margin-top: 4px; }
+    .mini-bar-fill { height: 100%; border-radius: 99px; }
+    .orders-filter { display: flex; gap: 10px; margin-bottom: 16px; align-items: center; }
+    .filter-select { padding: 7px 12px; border-radius: 8px; border: 1px solid #E8E6E1; font-size: 13px; background: #fff; color: #2D2D2D; font-family: 'DM Sans', sans-serif; }
+    .search-input { padding: 7px 12px; border-radius: 8px; border: 1px solid #E8E6E1; font-size: 13px; background: #fff; color: #2D2D2D; flex: 1; font-family: 'DM Sans', sans-serif; }
+    .month-nav { display: flex; align-items: center; gap: 14px; }
+    .month-btn { background: none; border: 1px solid #E8E6E1; border-radius: 8px; width: 30px; height: 30px; cursor: pointer; font-size: 14px; color: #6b6860; display: flex; align-items: center; justify-content: center; font-family: 'DM Sans', sans-serif; }
+    .month-btn:hover { background: #F5F4F1; }
+    .stat-row { display: flex; gap: 16px; margin-bottom: 20px; }
+    .stat-box { flex: 1; background: #FAFAF8; border-radius: 10px; padding: 14px 16px; }
+    .stat-box-label { font-size: 11.5px; color: #9B9488; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 500; margin-bottom: 6px; }
+    .stat-box-val { font-size: 20px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.4px; }
+    textarea { font-family: 'DM Sans', sans-serif; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <div id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-pill">Stocked.</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-item active" onclick="showView('dashboard', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" onclick="showView('orders', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        Orders
+      </div>
+      <div class="nav-item" onclick="showView('budget', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Budget
+      </div>
+      <div class="nav-item" onclick="showView('vendors', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Vendors
+      </div>
+      <div class="nav-item" onclick="showView('items', this)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        Items
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="nav-item" style="color:#9B9488;font-size:12px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>
+        Settings
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+
+    <!-- DASHBOARD -->
+    <div id="view-dashboard" class="view active">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Good morning ☀</div>
+          <div class="page-sub">March 2025 · Week 3 of 4</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">Monthly Budget</div>
+            <div class="kpi-value">$1,240</div>
+            <div class="kpi-sub">remaining of $2,000</div>
+            <div class="progress-bar"><div class="progress-fill progress-green" style="width:62%"></div></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Orders This Month</div>
+            <div class="kpi-value">7</div>
+            <div class="kpi-sub"><span class="badge badge-amber">3 pending</span></div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Top Spend Category</div>
+            <div class="kpi-value">Beverages</div>
+            <div class="kpi-sub">$480 spent this month</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Next Order</div>
+            <div class="kpi-value" style="font-size:16px;padding-top:4px;">Mar 24</div>
+            <div class="kpi-sub">Costco · Est. $340</div>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title"><span class="card-title-text">Spend by category</span><span style="font-size:12px;color:#9B9488;">March</span></div>
+            <div class="bar-row"><div class="bar-label">Beverages</div><div class="bar-track"><div class="bar-fill" style="width:88%"></div></div><div class="bar-amount">$480</div></div>
+            <div class="bar-row"><div class="bar-label">Snacks</div><div class="bar-track"><div class="bar-fill" style="width:62%"></div></div><div class="bar-amount">$310</div></div>
+            <div class="bar-row"><div class="bar-label">Fresh</div><div class="bar-track"><div class="bar-fill bar-fill-accent" style="width:34%"></div></div><div class="bar-amount">$120</div></div>
+            <div class="bar-row"><div class="bar-label">Supplies</div><div class="bar-track"><div class="bar-fill bar-fill-accent" style="width:28%"></div></div><div class="bar-amount">$90</div></div>
+            <div class="bar-row"><div class="bar-label">Other</div><div class="bar-track"><div class="bar-fill bar-fill-accent" style="width:15%"></div></div><div class="bar-amount">$40</div></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><span class="card-title-text">Recent orders</span></div>
+            <table>
+              <thead><tr><th>Date</th><th>Vendor</th><th>Amount</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Mar 18</td><td>Costco</td><td>$342</td><td><span class="badge badge-green">Delivered</span></td></tr>
+                <tr><td>Mar 15</td><td>Amazon Biz</td><td>$87</td><td><span class="badge badge-green">Delivered</span></td></tr>
+                <tr><td>Mar 12</td><td>Local Bakery</td><td>$65</td><td><span class="badge badge-amber">Pending</span></td></tr>
+                <tr><td>Mar 8</td><td>Instacart</td><td>$120</td><td><span class="badge badge-amber">Pending</span></td></tr>
+                <tr><td>Mar 3</td><td>Costco</td><td>$298</td><td><span class="badge badge-green">Delivered</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            <span class="card-title-text">AI insights</span>
+            <span class="insight-badge">AI · Coming in v2</span>
+          </div>
+          <div class="insight-item">Beverages spend is at 84% of monthly allocation with 12 days remaining in March.</div>
+          <div class="insight-item">Paper towels haven't been ordered in 6 weeks — you may be running low.</div>
+          <div class="insight-item">Your average Costco order is $320. Consider consolidating the 3 smaller pending orders.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div id="view-orders" class="view">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Orders</div>
+          <div class="page-sub">All purchase orders · March 2025</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn">Import CSV</button>
+          <button class="btn btn-primary">+ New order</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="orders-filter">
+          <select class="filter-select"><option>All statuses</option><option>Delivered</option><option>Pending</option><option>Cancelled</option></select>
+          <select class="filter-select"><option>All vendors</option><option>Costco</option><option>Amazon Business</option><option>Local Bakery</option><option>Instacart</option></select>
+          <input class="search-input" placeholder="Search orders..."/>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table>
+            <thead style="background:#FAFAF8;">
+              <tr>
+                <th style="padding:12px 16px;">Date</th>
+                <th style="padding:12px 16px;">Vendor</th>
+                <th style="padding:12px 16px;">Category</th>
+                <th style="padding:12px 16px;">Items</th>
+                <th style="padding:12px 16px;">Total</th>
+                <th style="padding:12px 16px;">Status</th>
+                <th style="padding:12px 16px;"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #F8F7F4;"><td style="padding:13px 16px;">Mar 18</td><td style="padding:13px 16px;font-weight:500;">Costco</td><td style="padding:13px 16px;"><span class="tag">Snacks</span> <span class="tag">Beverages</span></td><td style="padding:13px 16px;color:#9B9488;">8 items</td><td style="padding:13px 16px;font-weight:500;">$342</td><td style="padding:13px 16px;"><span class="badge badge-green">Delivered</span></td><td style="padding:13px 16px;color:#9B9488;font-size:12px;">Edit</td></tr>
+              <tr style="border-bottom:1px solid #F8F7F4;"><td style="padding:13px 16px;">Mar 15</td><td style="padding:13px 16px;font-weight:500;">Amazon Business</td><td style="padding:13px 16px;"><span class="tag">Supplies</span></td><td style="padding:13px 16px;color:#9B9488;">3 items</td><td style="padding:13px 16px;font-weight:500;">$87</td><td style="padding:13px 16px;"><span class="badge badge-green">Delivered</span></td><td style="padding:13px 16px;color:#9B9488;font-size:12px;">Edit</td></tr>
+              <tr style="border-bottom:1px solid #F8F7F4;"><td style="padding:13px 16px;">Mar 12</td><td style="padding:13px 16px;font-weight:500;">Local Bakery</td><td style="padding:13px 16px;"><span class="tag">Fresh</span></td><td style="padding:13px 16px;color:#9B9488;">2 items</td><td style="padding:13px 16px;font-weight:500;">$65</td><td style="padding:13px 16px;"><span class="badge badge-amber">Pending</span></td><td style="padding:13px 16px;color:#9B9488;font-size:12px;">Edit</td></tr>
+              <tr style="border-bottom:1px solid #F8F7F4;"><td style="padding:13px 16px;">Mar 8</td><td style="padding:13px 16px;font-weight:500;">Instacart</td><td style="padding:13px 16px;"><span class="tag">Fresh</span> <span class="tag">Snacks</span></td><td style="padding:13px 16px;color:#9B9488;">5 items</td><td style="padding:13px 16px;font-weight:500;">$120</td><td style="padding:13px 16px;"><span class="badge badge-amber">Pending</span></td><td style="padding:13px 16px;color:#9B9488;font-size:12px;">Edit</td></tr>
+              <tr style="border-bottom:1px solid #F8F7F4;"><td style="padding:13px 16px;">Mar 3</td><td style="padding:13px 16px;font-weight:500;">Costco</td><td style="padding:13px 16px;"><span class="tag">Beverages</span></td><td style="padding:13px 16px;color:#9B9488;">6 items</td><td style="padding:13px 16px;font-weight:500;">$298</td><td style="padding:13px 16px;"><span class="badge badge-green">Delivered</span></td><td style="padding:13px 16px;color:#9B9488;font-size:12px;">Edit</td></tr>
+              <tr style="border-bottom:1px solid #F8F7F4;"><td style="padding:13px 16px;">Feb 26</td><td style="padding:13px 16px;font-weight:500;">Amazon Business</td><td style="padding:13px 16px;"><span class="tag">Supplies</span></td><td style="padding:13px 16px;color:#9B9488;">4 items</td><td style="padding:13px 16px;font-weight:500;">$112</td><td style="padding:13px 16px;"><span class="badge badge-green">Delivered</span></td><td style="padding:13px 16px;color:#9B9488;font-size:12px;">Edit</td></tr>
+              <tr><td style="padding:13px 16px;">Feb 20</td><td style="padding:13px 16px;font-weight:500;">Costco</td><td style="padding:13px 16px;"><span class="tag">Snacks</span> <span class="tag">Beverages</span></td><td style="padding:13px 16px;color:#9B9488;">10 items</td><td style="padding:13px 16px;font-weight:500;">$415</td><td style="padding:13px 16px;"><span class="badge badge-red">Cancelled</span></td><td style="padding:13px 16px;color:#9B9488;font-size:12px;">Edit</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUDGET -->
+    <div id="view-budget" class="view">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Budget</div>
+          <div class="page-sub">Spend tracking and allocation</div>
+        </div>
+        <div class="topbar-actions">
+          <div class="month-nav">
+            <button class="month-btn">‹</button>
+            <span style="font-size:13px;font-weight:500;">March 2025</span>
+            <button class="month-btn">›</button>
+          </div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="stat-row">
+          <div class="stat-box"><div class="stat-box-label">Total budget</div><div class="stat-box-val">$2,000</div></div>
+          <div class="stat-box"><div class="stat-box-label">Spent so far</div><div class="stat-box-val" style="color:#B85450;">$760</div></div>
+          <div class="stat-box"><div class="stat-box-label">Remaining</div><div class="stat-box-val" style="color:#4A7C59;">$1,240</div></div>
+          <div class="stat-box"><div class="stat-box-label">Projected month-end</div><div class="stat-box-val" style="color:#C98B3A;">$1,480</div></div>
+        </div>
+        <div class="two-col">
+          <div class="card">
+            <div class="card-title"><span class="card-title-text">Spend by category</span></div>
+            <div class="budget-header"><span>Category</span><span>Budget</span><span>Spent</span><span>Remaining</span><span>% Used</span></div>
+            <div class="budget-row"><span style="font-weight:500;">Beverages</span><span style="color:#9B9488;">$500</span><span>$480</span><span style="color:#C98B3A;font-weight:500;">$20</span><div><span style="font-size:12px;color:#C98B3A;font-weight:500;">96%</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:96%;background:#C98B3A;"></div></div></div></div>
+            <div class="budget-row"><span style="font-weight:500;">Snacks</span><span style="color:#9B9488;">$600</span><span>$310</span><span style="color:#4A7C59;font-weight:500;">$290</span><div><span style="font-size:12px;color:#4A7C59;font-weight:500;">52%</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:52%;background:#4A7C59;"></div></div></div></div>
+            <div class="budget-row"><span style="font-weight:500;">Fresh</span><span style="color:#9B9488;">$400</span><span>$120</span><span style="color:#4A7C59;font-weight:500;">$280</span><div><span style="font-size:12px;color:#4A7C59;font-weight:500;">30%</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:30%;background:#4A7C59;"></div></div></div></div>
+            <div class="budget-row"><span style="font-weight:500;">Supplies</span><span style="color:#9B9488;">$300</span><span>$90</span><span style="color:#4A7C59;font-weight:500;">$210</span><div><span style="font-size:12px;color:#4A7C59;font-weight:500;">30%</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:30%;background:#4A7C59;"></div></div></div></div>
+            <div class="budget-row"><span style="font-weight:500;">Other</span><span style="color:#9B9488;">$200</span><span>$40</span><span style="color:#4A7C59;font-weight:500;">$160</span><div><span style="font-size:12px;color:#4A7C59;font-weight:500;">20%</span><div class="mini-bar-track"><div class="mini-bar-fill" style="width:20%;background:#4A7C59;"></div></div></div></div>
+          </div>
+          <div class="card">
+            <div class="card-title"><span class="card-title-text">Spend by vendor</span></div>
+            <div class="budget-header" style="grid-template-columns:1fr 80px 60px 100px;"><span>Vendor</span><span>Spent</span><span>Orders</span><span>Avg order</span></div>
+            <div style="display:grid;grid-template-columns:1fr 80px 60px 100px;gap:8px;align-items:center;padding:11px 0;border-bottom:1px solid #F8F7F4;font-size:13px;"><span style="font-weight:500;">Costco</span><span>$640</span><span style="color:#9B9488;">3</span><span style="color:#4A7C59;font-weight:500;">$213</span></div>
+            <div style="display:grid;grid-template-columns:1fr 80px 60px 100px;gap:8px;align-items:center;padding:11px 0;border-bottom:1px solid #F8F7F4;font-size:13px;"><span style="font-weight:500;">Amazon Business</span><span>$199</span><span style="color:#9B9488;">2</span><span style="color:#4A7C59;font-weight:500;">$100</span></div>
+            <div style="display:grid;grid-template-columns:1fr 80px 60px 100px;gap:8px;align-items:center;padding:11px 0;border-bottom:1px solid #F8F7F4;font-size:13px;"><span style="font-weight:500;">Instacart</span><span>$120</span><span style="color:#9B9488;">1</span><span style="color:#9B9488;font-weight:500;">$120</span></div>
+            <div style="display:grid;grid-template-columns:1fr 80px 60px 100px;gap:8px;align-items:center;padding:11px 0;font-size:13px;"><span style="font-weight:500;">Local Bakery</span><span>$65</span><span style="color:#9B9488;">1</span><span style="color:#9B9488;font-weight:500;">$65</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title"><span class="card-title-text">Budget notes</span></div>
+          <textarea style="width:100%;border:1px solid #E8E6E1;border-radius:8px;padding:10px 12px;font-size:13px;color:#2D2D2D;resize:none;background:#FAFAF8;line-height:1.6;" rows="3" placeholder="Add notes about this month's budget (e.g. holiday party, team event, etc.)..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- VENDORS -->
+    <div id="view-vendors" class="view">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Vendors</div>
+          <div class="page-sub">Your vendor directory</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn btn-primary">+ Add vendor</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="vendor-grid">
+          <div class="vendor-card"><div class="vendor-name">Costco</div><div class="vendor-tags"><span class="tag">Snacks</span><span class="tag">Beverages</span><span class="tag">Supplies</span></div><div class="vendor-meta">Contact: Sarah M. · sarah@costco.com<br>Last order: Mar 18, 2025<br>All-time spend: <strong style="color:#2D2D2D;">$4,820</strong></div></div>
+          <div class="vendor-card"><div class="vendor-name">Amazon Business</div><div class="vendor-tags"><span class="tag">Supplies</span><span class="tag">Other</span></div><div class="vendor-meta">Contact: Account portal<br>Last order: Mar 15, 2025<br>All-time spend: <strong style="color:#2D2D2D;">$1,240</strong></div></div>
+          <div class="vendor-card"><div class="vendor-name">Local Bakery Co.</div><div class="vendor-tags"><span class="tag">Fresh</span><span class="tag">Snacks</span></div><div class="vendor-meta">Contact: Marco T. · marco@localbakery.co<br>Last order: Mar 12, 2025<br>All-time spend: <strong style="color:#2D2D2D;">$680</strong></div></div>
+          <div class="vendor-card"><div class="vendor-name">Instacart Business</div><div class="vendor-tags"><span class="tag">Fresh</span><span class="tag">Beverages</span></div><div class="vendor-meta">Contact: App-based<br>Last order: Mar 8, 2025<br>All-time spend: <strong style="color:#2D2D2D;">$920</strong></div></div>
+          <div class="vendor-card" style="border:1.5px dashed #E8E6E1;background:#FAFAF8;display:flex;align-items:center;justify-content:center;cursor:pointer;min-height:120px;"><div style="text-align:center;color:#9B9488;"><div style="font-size:22px;margin-bottom:6px;">+</div><div style="font-size:13px;">Add vendor</div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ITEMS -->
+    <div id="view-items" class="view">
+      <div class="topbar">
+        <div>
+          <div class="page-title">Item catalog</div>
+          <div class="page-sub">Products you order regularly</div>
+        </div>
+        <div class="topbar-actions">
+          <button class="btn" style="opacity:0.5;cursor:not-allowed;">Smart reorder · v2</button>
+          <button class="btn btn-primary">+ Add item</button>
+        </div>
+      </div>
+      <div class="content">
+        <div class="orders-filter">
+          <select class="filter-select"><option>All categories</option><option>Beverages</option><option>Snacks</option><option>Fresh</option><option>Supplies</option></select>
+          <select class="filter-select"><option>All vendors</option><option>Costco</option><option>Amazon Business</option><option>Local Bakery</option></select>
+          <input class="search-input" placeholder="Search items..."/>
+        </div>
+        <div class="card" style="padding:0;overflow:hidden;">
+          <table>
+            <thead style="background:#FAFAF8;">
+              <tr>
+                <th style="padding:12px 16px;">Item name</th>
+                <th style="padding:12px 16px;">Category</th>
+                <th style="padding:12px 16px;">Preferred vendor</th>
+                <th style="padding:12px 16px;">Unit</th>
+                <th style="padding:12px 16px;">Avg price</th>
+                <th style="padding:12px 16px;">Last ordered</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #F8F7F4;"><td style="padding:12px 16px;font-weight:500;">Sparkling water (case)</td><td style="padding:12px 16px;"><span class="tag">Beverages</span></td><td style="padding:12px 16px;color:#9B9488;">Costco</td><td style="padding:12px 16px;color:#9B9488;">Case</td><td style="padding:12px 16px;">$18</td><td style="padding:12px 16px;color:#9B9488;">Mar 18</td></tr>
+              <tr style="border-bottom:1px solid #F8F7F4;"><td style="padding:12px 16px;font-weight:500;">Cold brew coffee</td><td style="padding:12px 16px;"><span class="tag">Beverages</span></td><td style="padding:12px 16px;color:#9B9488;">Instacart</td><td style="padding:12px 16px;color:#9B9488;">Case</td><td style="padding:12px 16px;">$42</td><td style="padding:12px 16px;color:#9B9488;">Mar 8</td></tr>
+              <tr style="border-bottom:1px solid #F8F7F4;"><td style="padding:12px 16px;font-weight:500;">Mixed nuts</td><td style="padding:12px 16px;"><span class="tag">Snacks</span></td><td style="padding:12px 16px;color:#9B9488;">Costco</td><td style="padding:12px 16px;color:#9B9488;">Bag</td><td style="padding:12px 16px;">$22</td><td style="padding:12px 16px;color:#9B9488;">Mar 18</td></tr>
+              <tr style="border-bottom:1px solid #F8F7F4;"><td style="padding:12px 16px;font-weight:500;">Granola bars</td><td style="padding:12px 16px;"><span class="tag">Snacks</span></td><td style="padding:12px 16px;color:#9B9488;">Costco</td><td style="padding:12px 16px;color:#9B9488;">Box</td><td style="padding:12px 16px;">$16</td><td style="padding:12px 16px;color:#9B9488;">Mar 3</td></tr>
+              <tr style="border-bottom:1px solid #F8F7F4;"><td style="padding:12px 16px;font-weight:500;">Sourdough loaf</td><td style="padding:12px 16px;"><span class="tag">Fresh</span></td><td style="padding:12px 16px;color:#9B9488;">Local Bakery</td><td style="padding:12px 16px;color:#9B9488;">Each</td><td style="padding:12px 16px;">$12</td><td style="padding:12px 16px;color:#9B9488;">Mar 12</td></tr>
+              <tr style="border-bottom:1px solid #F8F7F4;"><td style="padding:12px 16px;font-weight:500;">Paper towels</td><td style="padding:12px 16px;"><span class="tag">Supplies</span></td><td style="padding:12px 16px;color:#9B9488;">Amazon Business</td><td style="padding:12px 16px;color:#9B9488;">Case</td><td style="padding:12px 16px;">$28</td><td style="padding:12px 16px;color:#9B9488;"><span style="margin-right:6px;">Feb 10</span><span class="badge badge-amber" style="font-size:10px;">Reorder?</span></td></tr>
+              <tr style="border-bottom:1px solid #F8F7F4;"><td style="padding:12px 16px;font-weight:500;">Dish soap</td><td style="padding:12px 16px;"><span class="tag">Supplies</span></td><td style="padding:12px 16px;color:#9B9488;">Amazon Business</td><td style="padding:12px 16px;color:#9B9488;">Each</td><td style="padding:12px 16px;">$8</td><td style="padding:12px 16px;color:#9B9488;">Mar 15</td></tr>
+              <tr><td style="padding:12px 16px;font-weight:500;">Fruit basket</td><td style="padding:12px 16px;"><span class="tag">Fresh</span></td><td style="padding:12px 16px;color:#9B9488;">Instacart</td><td style="padding:12px 16px;color:#9B9488;">Each</td><td style="padding:12px 16px;">$35</td><td style="padding:12px 16px;color:#9B9488;">Mar 8</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function showView(name, el) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('view-' + name).classList.add('active');
+    el.classList.add('active');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stocked. — Logo System</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #FAFAF8; color: #1a1a1a; padding: 48px; }
+    h1 { font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #9B9488; margin-bottom: 40px; }
+    .section { margin-bottom: 48px; }
+    .section-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: #C8C4BC; margin-bottom: 20px; }
+    .asset-row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .asset-card { background: #fff; border: 1px solid #E8E6E1; border-radius: 14px; overflow: hidden; min-width: 200px; }
+    .asset-card.dark-bg { background: #1a1a1a; border-color: #333; }
+    .asset-preview { padding: 36px 32px; display: flex; align-items: center; justify-content: center; min-height: 120px; }
+    .asset-label { padding: 12px 16px; border-top: 1px solid #F0EEE9; font-size: 11.5px; color: #9B9488; font-weight: 500; }
+    .asset-card.dark-bg .asset-label { border-top-color: #2a2a2a; color: #666; background: #111; }
+    .usage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .usage-item { background: #fff; border: 1px solid #E8E6E1; border-radius: 10px; padding: 14px 16px; }
+    .usage-context { font-size: 12px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+    .usage-asset { font-size: 11.5px; color: #9B9488; }
+    .pill-black { background: #1a1a1a; color: #fff; font-weight: 700; font-size: 20px; padding: 8px 18px; border-radius: 10px; letter-spacing: -0.1px; display: inline-block; }
+    .pill-white { background: #fff; color: #1a1a1a; font-weight: 700; font-size: 20px; padding: 8px 18px; border-radius: 10px; letter-spacing: -0.1px; display: inline-block; border: 2px solid #1a1a1a; }
+    .wordmark-black { font-weight: 700; font-size: 28px; color: #1a1a1a; letter-spacing: -0.8px; }
+    .wordmark-white { font-weight: 700; font-size: 28px; color: #ffffff; letter-spacing: -0.8px; }
+    .icon-black { width: 56px; height: 56px; background: #1a1a1a; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 26px; color: #fff; letter-spacing: -0.5px; }
+    .icon-white { width: 56px; height: 56px; background: #fff; border-radius: 14px; border: 2px solid #1a1a1a; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 26px; color: #1a1a1a; letter-spacing: -0.5px; }
+    .divider { height: 1px; background: #E8E6E1; margin: 40px 0; }
+  </style>
+</head>
+<body>
+  <h1>Stocked. — Logo System</h1>
+
+  <div class="section">
+    <div class="section-title">Pill lockup</div>
+    <div class="asset-row">
+      <div class="asset-card">
+        <div class="asset-preview" style="background:#FAFAF8;">
+          <div class="pill-black">Stocked.</div>
+        </div>
+        <div class="asset-label">Black pill — primary</div>
+      </div>
+      <div class="asset-card dark-bg">
+        <div class="asset-preview" style="background:#1a1a1a;">
+          <div class="pill-white">Stocked.</div>
+        </div>
+        <div class="asset-label">White pill — on dark backgrounds</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Wordmark</div>
+    <div class="asset-row">
+      <div class="asset-card">
+        <div class="asset-preview" style="background:#FAFAF8;">
+          <div class="wordmark-black">Stocked.</div>
+        </div>
+        <div class="asset-label">Black wordmark</div>
+      </div>
+      <div class="asset-card dark-bg">
+        <div class="asset-preview" style="background:#1a1a1a;">
+          <div class="wordmark-white">Stocked.</div>
+        </div>
+        <div class="asset-label">White wordmark — on dark backgrounds</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Icon mark — S.</div>
+    <div class="asset-row">
+      <div class="asset-card">
+        <div class="asset-preview" style="background:#FAFAF8; gap: 20px; display:flex; align-items:center;">
+          <div class="icon-black">S.</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="width:36px;height:36px;background:#1a1a1a;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px;color:#fff;letter-spacing:-0.3px;">S.</div>
+            <div style="width:24px;height:24px;background:#1a1a1a;border-radius:6px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#fff;">S.</div>
+          </div>
+        </div>
+        <div class="asset-label">Black icon — 56px, 36px, 24px</div>
+      </div>
+      <div class="asset-card dark-bg">
+        <div class="asset-preview" style="background:#1a1a1a; gap: 20px; display:flex; align-items:center;">
+          <div class="icon-white">S.</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="width:36px;height:36px;background:#fff;border-radius:9px;border:2px solid #1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:17px;color:#1a1a1a;letter-spacing:-0.3px;">S.</div>
+            <div style="width:24px;height:24px;background:#fff;border-radius:6px;border:1.5px solid #1a1a1a;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;color:#1a1a1a;">S.</div>
+          </div>
+        </div>
+        <div class="asset-label">White icon — 56px, 36px, 24px</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-title">Usage guide</div>
+    <div class="usage-grid">
+      <div class="usage-item"><div class="usage-context">App sidebar</div><div class="usage-asset">Black pill lockup</div></div>
+      <div class="usage-item"><div class="usage-context">Browser favicon</div><div class="usage-asset">S. icon — 24px black</div></div>
+      <div class="usage-item"><div class="usage-context">App icon (mobile/desktop)</div><div class="usage-asset">S. icon — 56px black</div></div>
+      <div class="usage-item"><div class="usage-context">Document & export headers</div><div class="usage-asset">Black wordmark</div></div>
+      <div class="usage-item"><div class="usage-context">Dark sidebar / dark mode</div><div class="usage-asset">White pill or white wordmark</div></div>
+      <div class="usage-item"><div class="usage-context">Email signatures</div><div class="usage-asset">Black wordmark</div></div>
+    </div>
+  </div>
+
+</body>
+</html>
