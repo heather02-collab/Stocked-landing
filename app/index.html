@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stocked OS</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="sidebar-brand" href="../index.html" aria-label="Back to Stocked site">
+        <img src="../assets/logos/stocked-wordmark-black.svg" alt="Stocked logo" />
+      </a>
+      <div class="workspace-badge">Stocked OS</div>
+
+      <nav class="sidebar-nav" aria-label="Primary">
+        <a class="nav-item is-active" href="#overview">Overview</a>
+        <a class="nav-item" href="#orders">Orders</a>
+        <a class="nav-item" href="#budget">Budget</a>
+        <a class="nav-item" href="#vendors">Vendors</a>
+        <a class="nav-item" href="#inventory">Inventory</a>
+      </nav>
+
+      <div class="sidebar-note">
+        Starter app workspace for the operational dashboard.
+      </div>
+    </aside>
+
+    <main class="main-panel">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Internal workspace</p>
+          <h1>Pantry operations, budgets, and ordering in one place.</h1>
+          <p class="intro">
+            This is the active home for the actual Stocked OS product, separate from the marketing site.
+          </p>
+        </div>
+        <div class="topbar-actions">
+          <a class="btn btn-secondary" href="../index.html">View website</a>
+          <button class="btn btn-primary" type="button">Create order</button>
+        </div>
+      </header>
+
+      <section class="stats-grid" id="overview">
+        <article class="stat-card">
+          <p class="stat-label">Monthly budget</p>
+          <p class="stat-value">$1,240</p>
+          <p class="stat-subtext">$760 already allocated this month</p>
+        </article>
+        <article class="stat-card">
+          <p class="stat-label">Pending orders</p>
+          <p class="stat-value">3</p>
+          <p class="stat-subtext">2 vendor approvals still needed</p>
+        </article>
+        <article class="stat-card">
+          <p class="stat-label">Low-stock items</p>
+          <p class="stat-value">12</p>
+          <p class="stat-subtext">Coffee, cups, fruit, and paper goods</p>
+        </article>
+      </section>
+
+      <section class="content-grid">
+        <article class="panel" id="orders">
+          <div class="panel-heading">
+            <h2>Orders</h2>
+            <span class="panel-tag">This week</span>
+          </div>
+          <ul class="list">
+            <li>Costco restock scheduled for Friday</li>
+            <li>Bakery order awaiting delivery window</li>
+            <li>Amazon Business supplies submitted for approval</li>
+          </ul>
+        </article>
+
+        <article class="panel" id="budget">
+          <div class="panel-heading">
+            <h2>Budget</h2>
+            <span class="panel-tag">March</span>
+          </div>
+          <ul class="list">
+            <li>Beverages are pacing highest against plan</li>
+            <li>Fresh food remains within weekly target</li>
+            <li>Supplies spend is below forecast</li>
+          </ul>
+        </article>
+
+        <article class="panel" id="vendors">
+          <div class="panel-heading">
+            <h2>Vendors</h2>
+            <span class="panel-tag">Priority</span>
+          </div>
+          <ul class="list">
+            <li>Costco for bulk pantry and drinks</li>
+            <li>Local Bakery for pastries and grab-and-go items</li>
+            <li>Amazon Business for cleaning and backup supply runs</li>
+          </ul>
+        </article>
+
+        <article class="panel" id="inventory">
+          <div class="panel-heading">
+            <h2>Inventory</h2>
+            <span class="panel-tag">Needs setup</span>
+          </div>
+          <p class="placeholder-copy">
+            Use this area for your first real inventory workflows, low-stock rules, and reorder logic.
+          </p>
+        </article>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

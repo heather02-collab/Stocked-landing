@@ -497,15 +497,23 @@ a:hover { text-decoration: none; }
       border-right: 1px solid var(--color-border-light);
       padding: 16px 8px;
     }
-    .dash-logo-pill {
-      background: var(--color-ink);
-      color: #fff;
-      font-weight: 700;
-      font-size: 12px;
-      padding: 5px 11px;
-      border-radius: 8px;
-      display: inline-block;
+    .dash-logo-mark {
+      width: 38px;
+      height: 38px;
       margin: 4px 8px 16px;
+      border-radius: 12px;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.05);
+      flex-shrink: 0;
+    }
+    .dash-logo-mark img {
+      width: 20px;
+      height: 20px;
+      display: block;
     }
     .dash-nav-item {
       display: flex;
@@ -969,7 +977,7 @@ a:hover { text-decoration: none; }
 
       .hero-headline {
         font-size: clamp(32px, 8.4vw, 46px);
-        max-width: 13ch;
+        max-width: 15.5ch;
         margin-bottom: 14px;
         letter-spacing: -0.9px;
       }
@@ -1007,13 +1015,57 @@ a:hover { text-decoration: none; }
         flex-direction: column;
       }
 
+      .mockup-frame {
+        border-radius: 24px;
+        background: linear-gradient(180deg, #f8f6f1 0%, #efebe3 100%);
+      }
+
+      .mockup-bar {
+        display: none;
+      }
+
       .dash-sidebar {
         width: 100%;
         min-width: unset;
         display: flex;
-        gap: 6px;
-        padding: 10px;
-        overflow-x: auto;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 12px;
+        overflow: visible;
+        border-right: none;
+        border-bottom: 1px solid var(--color-border-light);
+        background: rgba(255,255,255,0.92);
+        backdrop-filter: blur(10px);
+      }
+
+      .dash-logo-mark {
+        margin: 0 4px 0 0;
+        width: 34px;
+        height: 34px;
+        border-radius: 10px;
+      }
+
+      .dash-logo-mark img {
+        width: 18px;
+        height: 18px;
+      }
+
+      .dash-nav-item {
+        margin-bottom: 0;
+        padding: 8px 10px;
+        font-size: 11px;
+        white-space: nowrap;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border-light);
+      }
+
+      .dash-nav-item.active {
+        border-color: var(--color-ink);
+      }
+
+      .dash-main {
+        padding: 16px;
       }
 
       .dash-kpis {
@@ -1044,7 +1096,23 @@ a:hover { text-decoration: none; }
 
     @media (max-width: 480px) {
       .hero-headline {
-        max-width: 12.5ch;
+        max-width: 14.5ch;
+        font-size: clamp(30px, 9vw, 40px);
+      }
+
+      .dash-sidebar {
+        padding: 10px;
+        gap: 6px;
+      }
+
+      .dash-logo-mark {
+        width: 32px;
+        height: 32px;
+      }
+
+      .dash-nav-item {
+        padding: 7px 9px;
+        font-size: 10.5px;
       }
 
       .dash-kpis {
